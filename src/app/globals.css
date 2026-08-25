@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/*
+ * Accurate Storage palette — carried over from the public rental site
+ * (index.html: navy #1D3557 / pink #E8175D) plus the darker sidebar navy
+ * and status colors from Callie's dashboard mockup. This is the DEFAULT
+ * palette for a brand-new organization; each facility can override
+ * navy/pink via Settings > Branding (organizations.primary_color /
+ * accent_color) — see src/app/(app)/layout.tsx's themeStyleCss.
+ */
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/*
+ * Color tokens are a plain (non-inline) `@theme` block on purpose: plain
+ * `@theme` still emits real `:root { --color-x: ... }` custom properties,
+ * but every generated utility (`.text-navy`, `.bg-pink`, etc.) references
+ * them via `var(--color-x)` instead of inlining the literal hex — which is
+ * what makes the Settings > Branding color override possible at all. Do
+ * not add `inline` back to this block, or every color becomes a
+ * build-time literal and per-organization branding silently stops doing
+ * anything.
+ */
+@theme {
+  --color-paper: #f3f5f9; /* page background */
+  --color-surface: #ffffff; /* card / sidebar-content background */
+  --color-line: #e2e8f0; /* borders */
+
+  --color-ink: #1d3557; /* headings, primary text */
+  --color-ink-muted: #64748b; /* secondary text */
+  --color-ink-faint: #94a3b8; /* tertiary text, widget labels */
+
+  --color-navy: #1d3557;
+  --color-navy-dark: #0f1d33; /* sidebar background */
+  --color-navy-soft: #e7ecf3;
+
+  --color-pink: #e8175d;
+  --color-pink-dark: #c4124f;
+  --color-pink-soft: #fde3ec;
+
+  --color-green: #22863a;
+  --color-green-soft: #d4edda;
+  --color-amber: #ff9800;
+  --color-amber-soft: #fff3cd;
+  --color-red: #c0392b;
+  --color-red-soft: #fbe0e6;
+
+  --shadow-card: 0 2px 8px rgba(15, 29, 51, 0.08);
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
