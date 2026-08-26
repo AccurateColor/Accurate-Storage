@@ -29,6 +29,7 @@ export type Database = {
           postal_code: string | null;
           stripe_secret_key: string | null;
           stripe_publishable_key: string | null;
+          public_availability_enabled: boolean;
           created_at: string;
         };
         Insert: {
@@ -47,6 +48,7 @@ export type Database = {
           postal_code?: string | null;
           stripe_secret_key?: string | null;
           stripe_publishable_key?: string | null;
+          public_availability_enabled?: boolean;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["organizations"]["Insert"]>;
@@ -132,6 +134,14 @@ export type Database = {
           lease_end: string | null;
           source: string | null;
           notes: string | null;
+          address_line1: string | null;
+          city: string | null;
+          state: string | null;
+          postal_code: string | null;
+          vehicle_info: string | null;
+          stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
+          intake_details: Json | null;
           created_at: string;
         };
         Insert: {
@@ -147,6 +157,14 @@ export type Database = {
           lease_end?: string | null;
           source?: string | null;
           notes?: string | null;
+          address_line1?: string | null;
+          city?: string | null;
+          state?: string | null;
+          postal_code?: string | null;
+          vehicle_info?: string | null;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          intake_details?: Json | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["tenants"]["Insert"]>;

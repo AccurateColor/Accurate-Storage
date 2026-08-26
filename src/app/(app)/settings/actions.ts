@@ -49,6 +49,21 @@ export async function updateBranding(_prev: ActionState, formData: FormData): Pr
   return { error: null };
 }
 
+export async function updatePublicListing(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await getCurrentUser();
+  if (!user || !hasPermission(user, "admin")) return { error: "Only an admin can change this." };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("organizations")
+    .update({ public_availability_enabled: formData.get("public_availability_enabled") === "on" })
+    .eq("id", user.organization.id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/settings");
+  return { error: null };
+}
+
 export async function updateTheme(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const user = await getCurrentUser();
   if (!user || !hasPermission(user, "admin")) return { error: "Only an admin can update the theme." };

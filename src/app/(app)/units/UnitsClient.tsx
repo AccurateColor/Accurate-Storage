@@ -156,6 +156,12 @@ function UnitFormModal({
           </FormRow>
         </div>
         <FormRow>
+          <Label htmlFor="stripe_price_id">
+            Stripe Price ID <span className="normal-case font-normal text-ink-faint">(for the public rental site&apos;s checkout)</span>
+          </Label>
+          <Input id="stripe_price_id" name="stripe_price_id" placeholder="price_…" defaultValue={unit?.stripe_price_id ?? ""} />
+        </FormRow>
+        <FormRow>
           <Label htmlFor="notes">Notes</Label>
           <Textarea id="notes" name="notes" rows={2} defaultValue={unit?.notes ?? ""} />
         </FormRow>

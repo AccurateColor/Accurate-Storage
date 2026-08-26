@@ -7,6 +7,7 @@ import {
   reactivateTeamMember,
   setMemberPassword,
   updateBranding,
+  updatePublicListing,
   updateStripeKeys,
   updateTheme,
   type ActionState,
@@ -65,6 +66,7 @@ export function SettingsClient({
       <BrandingSection organization={organization} />
       <ThemeSection organization={organization} />
       <StripeSection organization={organization} />
+      <PublicListingSection organization={organization} />
       <TeamSection team={team} />
       <ComingSoonSection />
     </div>
@@ -208,6 +210,41 @@ function StripeSection({ organization }: { organization: Organization }) {
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={pending}>
             {pending ? "Saving…" : "Save Stripe Keys"}
+          </Button>
+          {saved && <span className="text-sm text-green">Saved.</span>}
+        </div>
+      </form>
+    </SectionCard>
+  );
+}
+
+function PublicListingSection({ organization }: { organization: Organization }) {
+  const [state, formAction, pending] = useActionState(updatePublicListing, initialState);
+  const saved = useAutoToast(state, pending);
+  const [enabled, setEnabled] = useState(organization.public_availability_enabled);
+
+  return (
+    <SectionCard title="Public Rental Site">
+      <p className="mb-4 text-sm text-ink-muted">
+        When on, your public rental site can read this facility&apos;s live unit numbers, sizes, rates, and vacancy
+        status — no tenant or payment data is ever exposed. This is what lets the public site&apos;s unit grid stay
+        in sync with what staff actually see here, instead of a hardcoded list that drifts out of date.
+      </p>
+      <form action={formAction} className="space-y-4">
+        <label className="flex items-center gap-2 text-sm text-ink">
+          <input
+            type="checkbox"
+            name="public_availability_enabled"
+            checked={enabled}
+            onChange={(e) => setEnabled(e.target.checked)}
+            className="h-4 w-4 rounded border-line"
+          />
+          Show live unit availability on the public rental site
+        </label>
+        {state.error && <p className="text-sm text-red">{state.error}</p>}
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={pending}>
+            {pending ? "Saving…" : "Save"}
           </Button>
           {saved && <span className="text-sm text-green">Saved.</span>}
         </div>

@@ -13,6 +13,7 @@ function parseUnitForm(formData: FormData) {
     square_footage: formData.get("square_footage") ? Number(formData.get("square_footage")) : null,
     monthly_rate: Number(formData.get("monthly_rate") ?? 0),
     status: String(formData.get("status") ?? "vacant") as "vacant" | "occupied" | "reserved" | "maintenance",
+    stripe_price_id: String(formData.get("stripe_price_id") ?? "").trim() || null,
     notes: String(formData.get("notes") ?? "").trim() || null,
   };
 }
