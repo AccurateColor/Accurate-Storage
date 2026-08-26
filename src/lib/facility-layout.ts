@@ -12,9 +12,11 @@
  * "paired" rows (a single tall cell in column 1 beside two stacked half-
  * height cells in column 2) and full-width single cells — modeled by
  * giving every row a HALF-unit height and having tall cells span two grid
- * rows. Building B is uniform pairs down both columns until the bottom
- * row, which splits into five narrow columns — modeled with a 10-column
- * grid so a normal pair is 5+5 and a narrow cell is 2 columns wide.
+ * rows. Building B uses a 10-column grid: B-1..B-12 were renovated into
+ * full-width pull-through units (each absorbed its former pair, B-13..
+ * B-24, which no longer exist as separate `units` rows — see the git log
+ * for that migration), so those rows now span all 10 columns; the bottom
+ * row (B-25..B-29) still splits into five narrow 2-column-wide cells.
  */
 
 export type LayoutCell = {
@@ -71,30 +73,21 @@ export const BUILDING_B_COLUMNS = 10;
 export const BUILDING_B_ROWS = 13;
 
 export const BUILDING_B_LAYOUT: LayoutCell[] = [
-  { unitNumber: "B-12", colStart: 1, colEnd: 6, rowStart: 1, rowEnd: 2 },
-  { unitNumber: "B-13", colStart: 6, colEnd: 11, rowStart: 1, rowEnd: 2 },
-  { unitNumber: "B-11", colStart: 1, colEnd: 6, rowStart: 2, rowEnd: 3 },
-  { unitNumber: "B-14", colStart: 6, colEnd: 11, rowStart: 2, rowEnd: 3 },
-  { unitNumber: "B-10", colStart: 1, colEnd: 6, rowStart: 3, rowEnd: 4 },
-  { unitNumber: "B-15", colStart: 6, colEnd: 11, rowStart: 3, rowEnd: 4 },
-  { unitNumber: "B-9", colStart: 1, colEnd: 6, rowStart: 4, rowEnd: 5 },
-  { unitNumber: "B-16", colStart: 6, colEnd: 11, rowStart: 4, rowEnd: 5 },
-  { unitNumber: "B-8", colStart: 1, colEnd: 6, rowStart: 5, rowEnd: 6 },
-  { unitNumber: "B-17", colStart: 6, colEnd: 11, rowStart: 5, rowEnd: 6 },
-  { unitNumber: "B-7", colStart: 1, colEnd: 6, rowStart: 6, rowEnd: 7 },
-  { unitNumber: "B-18", colStart: 6, colEnd: 11, rowStart: 6, rowEnd: 7 },
-  { unitNumber: "B-6", colStart: 1, colEnd: 6, rowStart: 7, rowEnd: 8 },
-  { unitNumber: "B-19", colStart: 6, colEnd: 11, rowStart: 7, rowEnd: 8 },
-  { unitNumber: "B-5", colStart: 1, colEnd: 6, rowStart: 8, rowEnd: 9 },
-  { unitNumber: "B-20", colStart: 6, colEnd: 11, rowStart: 8, rowEnd: 9 },
-  { unitNumber: "B-4", colStart: 1, colEnd: 6, rowStart: 9, rowEnd: 10 },
-  { unitNumber: "B-21", colStart: 6, colEnd: 11, rowStart: 9, rowEnd: 10 },
-  { unitNumber: "B-3", colStart: 1, colEnd: 6, rowStart: 10, rowEnd: 11 },
-  { unitNumber: "B-22", colStart: 6, colEnd: 11, rowStart: 10, rowEnd: 11 },
-  { unitNumber: "B-2", colStart: 1, colEnd: 6, rowStart: 11, rowEnd: 12 },
-  { unitNumber: "B-23", colStart: 6, colEnd: 11, rowStart: 11, rowEnd: 12 },
-  { unitNumber: "B-1", colStart: 1, colEnd: 6, rowStart: 12, rowEnd: 13 },
-  { unitNumber: "B-24", colStart: 6, colEnd: 11, rowStart: 12, rowEnd: 13 },
+  // Renovated into pull-through units — each of these now spans the full
+  // width of the building (what used to be this unit + its paired B-13..
+  // B-24 partner on the far side, now one unit keeping the lower number).
+  { unitNumber: "B-12", colStart: 1, colEnd: 11, rowStart: 1, rowEnd: 2 },
+  { unitNumber: "B-11", colStart: 1, colEnd: 11, rowStart: 2, rowEnd: 3 },
+  { unitNumber: "B-10", colStart: 1, colEnd: 11, rowStart: 3, rowEnd: 4 },
+  { unitNumber: "B-9", colStart: 1, colEnd: 11, rowStart: 4, rowEnd: 5 },
+  { unitNumber: "B-8", colStart: 1, colEnd: 11, rowStart: 5, rowEnd: 6 },
+  { unitNumber: "B-7", colStart: 1, colEnd: 11, rowStart: 6, rowEnd: 7 },
+  { unitNumber: "B-6", colStart: 1, colEnd: 11, rowStart: 7, rowEnd: 8 },
+  { unitNumber: "B-5", colStart: 1, colEnd: 11, rowStart: 8, rowEnd: 9 },
+  { unitNumber: "B-4", colStart: 1, colEnd: 11, rowStart: 9, rowEnd: 10 },
+  { unitNumber: "B-3", colStart: 1, colEnd: 11, rowStart: 10, rowEnd: 11 },
+  { unitNumber: "B-2", colStart: 1, colEnd: 11, rowStart: 11, rowEnd: 12 },
+  { unitNumber: "B-1", colStart: 1, colEnd: 11, rowStart: 12, rowEnd: 13 },
   { unitNumber: "B-29", colStart: 1, colEnd: 3, rowStart: 13, rowEnd: 14 },
   { unitNumber: "B-28", colStart: 3, colEnd: 5, rowStart: 13, rowEnd: 14 },
   { unitNumber: "B-27", colStart: 5, colEnd: 7, rowStart: 13, rowEnd: 14 },
