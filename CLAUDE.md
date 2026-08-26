@@ -7,6 +7,48 @@ multi-tenancy, security posture, what's built, and what's deliberately
 not built yet. This file is just the pointer + a running status log, same
 convention `../amazing-spaces-app/CLAUDE.md` uses.
 
+## Status (2026-08-26, later) — connected to the public rental site + real Stripe account
+
+Callie asked to connect her existing accuratestorage.net (Netlify, drag-
+and-drop deploy — not git-connected, so changes there don't push through
+this repo) and her real Stripe account. Built:
+
+- `organizations.public_availability_enabled` (opt-in) +
+  `units.stripe_price_id` (now editable from the Units page) — the public
+  site reads live unit number/size/rate/vacancy straight from this
+  database via the anon key instead of a hardcoded array. First RLS
+  attempt silently matched nothing for `anon` (subquery on
+  `organizations`, which has its own RLS blocking anon entirely) —
+  fixed with a `security definer` helper,
+  `public-listing-policy-fix-migration.sql`. Verified live: anon REST
+  read of the real unit returns real data, and the actual public
+  index.html (served over real HTTP, not a file:// preview — that
+  renders as an inert static snapshot, no JS runs) shows it.
+- `../Accurate Storage Station/netlify/functions/charge.js` rewritten:
+  resolves price/vacancy/Stripe Price ID from Supabase before charging
+  (hard-fails if Supabase is down — no safe price to fall back to), then
+  best-effort syncs the new tenant/occupied-unit/payment/gate-code/
+  activity-log into the dashboard AFTER a successful charge (never blocks
+  or fails the customer-facing response — see that file's own comment).
+- New `.../netlify/functions/webhook.js` for recurring monthly charges —
+  deliberately reuses an already-existing Stripe webhook endpoint
+  (`Accurate Storage Webhook`, listening to `invoice.payment_succeeded` +
+  `invoice.payment_failed`) rather than asking Callie to create a new
+  one; file renamed to `webhook.js` to match that endpoint's existing
+  path.
+- Real values collected from Callie: Stripe publishable key (now in
+  `index.html`), the existing webhook's signing secret. Both tenants.md-
+  worthy — see [[accurate-storage-app]] memory for the full list of what's
+  still needed in Netlify's env vars before any of this goes live
+  end-to-end (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+  STRIPE_WEBHOOK_SECRET — none added yet as of this entry, plus a
+  redeploy, since the site is drag-and-drop, not auto-deploying from any
+  repo I can push to).
+
+**Not yet done**: real Stripe Price IDs per unit (the org's actual
+Stripe Products/Prices don't exist yet — Callie needs to create them),
+the Netlify env vars above, and the redeploy itself.
+
 ## Status (2026-08-26) — live in production
 
 Deployed and verified end-to-end: signup → org+admin creation → login →
