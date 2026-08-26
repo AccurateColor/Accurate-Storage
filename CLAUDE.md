@@ -7,6 +7,39 @@ multi-tenancy, security posture, what's built, and what's deliberately
 not built yet. This file is just the pointer + a running status log, same
 convention `../amazing-spaces-app/CLAUDE.md` uses.
 
+## Status (2026-08-26) — live in production
+
+Deployed and verified end-to-end: signup → org+admin creation → login →
+real CRUD, both locally and on `https://accurate-storage.vercel.app`.
+Pilot org "Accurate Storage" exists with admin login
+`callie@accuratecoloronline.com`.
+
+Infra: GitHub `AccurateColor/Accurate-Storage` (push via a dedicated
+deploy key, `~/.ssh/id_ed25519_astorage` / host alias
+`github.com-accurate-storage` — added read-only at first, had to be
+re-added with write access checked), Supabase project
+`awpoiywbzbwlcikoafca` (schema.sql + policies.sql applied), Vercel project
+under the "Accurate Color" team.
+
+Two real bugs found and fixed via live testing, not caught by
+`build`/`eslint` alone:
+1. `BarChart.tsx`'s y-axis labels used the rounded *value* as a React key
+   — a brand-new org with $0 revenue rounds several steps to the same
+   number, causing a duplicate-key console error. Fixed: index as key
+   instead. Caught via the Next.js dev error overlay right after the
+   first real signup.
+2. The Vercel project's **Framework Preset was "Other" instead of
+   "Next.js"** on import — every route 404'd at the platform level
+   (`x-vercel-error: NOT_FOUND`) despite `npm run build` succeeding both
+   in Vercel's own logs and locally in production mode. Not a code or
+   Next.js-version issue (pinning `next`/`eslint-config-next` to 16.3.1,
+   matching `../amazing-spaces-app`, was tried first and made no
+   difference). Fixed in Settings → Build and Deployment → Framework
+   Preset → Next.js, then a fresh deploy. See
+   `~/.claude/projects/.../memory/vercel-framework-preset-gotcha.md` for
+   the full writeup — check this FIRST on any future "builds fine, 404s
+   everywhere" Vercel deployment before suspecting the app.
+
 ## Status (2026-08-25) — v1 core scaffolded, not yet connected to a real Supabase project
 
 Built from Claude Design's dashboard handoff
