@@ -20,8 +20,11 @@ export function BarChart({
         {yLabels
           .slice()
           .reverse()
-          .map((v) => (
-            <span key={v}>{formatValue(v)}</span>
+          .map((v, i) => (
+            // Index, not value, as key: at low/zero totals several rounded
+            // steps land on the same number (e.g. all-zero data), and a
+            // duplicate value would collide as a React key.
+            <span key={i}>{formatValue(v)}</span>
           ))}
       </div>
       <div className="flex flex-1 items-end gap-[3px] border-l border-line pl-2">
