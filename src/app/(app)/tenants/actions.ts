@@ -18,6 +18,7 @@ function parseTenantForm(formData: FormData) {
     lease_end: String(formData.get("lease_end") ?? "") || null,
     source: String(formData.get("source") ?? "").trim() || null,
     notes: String(formData.get("notes") ?? "").trim() || null,
+    stripe_subscription_id: String(formData.get("stripe_subscription_id") ?? "").trim() || null,
   };
 }
 
@@ -59,7 +60,14 @@ export async function createTenant(_prev: ActionState, formData: FormData): Prom
     .insert({ organization_id: user.organization.id, ...fields })
     .select()
     .single();
-  if (error || !tenant) return { error: error?.message ?? "Couldn't create tenant." };
+  if (error || !tenant) {
+    return {
+      error:
+        error?.code === "23505"
+          ? "That Stripe Subscription ID is already linked to another tenant."
+          : error?.message ?? "Couldn't create tenant.",
+    };
+  }
 
   await syncUnitOccupancy(supabase, user.organization.id, null, fields);
 
@@ -101,7 +109,14 @@ export async function updateTenant(tenantId: string, _prev: ActionState, formDat
     .update(fields)
     .eq("id", tenantId)
     .eq("organization_id", user.organization.id);
-  if (error) return { error: error.message };
+  if (error) {
+    return {
+      error:
+        error.code === "23505"
+          ? "That Stripe Subscription ID is already linked to another tenant."
+          : error.message,
+    };
+  }
 
   await syncUnitOccupancy(supabase, user.organization.id, existing?.unit_id ?? null, fields);
 

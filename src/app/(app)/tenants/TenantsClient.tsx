@@ -203,6 +203,15 @@ function TenantFormModal({
           <Input id="source" name="source" placeholder="Website, Referral, Walk-in…" defaultValue={tenant?.source ?? ""} />
         </FormRow>
         <FormRow>
+          <Label htmlFor="stripe_subscription_id">
+            Stripe Subscription ID{" "}
+            <span className="normal-case font-normal text-ink-faint">
+              (required for autopay charges to show up here automatically — find it on the customer in Stripe)
+            </span>
+          </Label>
+          <Input id="stripe_subscription_id" name="stripe_subscription_id" placeholder="sub_…" defaultValue={tenant?.stripe_subscription_id ?? ""} />
+        </FormRow>
+        <FormRow>
           <Label htmlFor="notes">Notes</Label>
           <Textarea id="notes" name="notes" rows={2} defaultValue={tenant?.notes ?? ""} />
         </FormRow>
