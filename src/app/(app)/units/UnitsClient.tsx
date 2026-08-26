@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { Input, Label, Select, Textarea, FormRow } from "@/components/ui/Field";
 import { StatusChip } from "@/components/ui/StatusChip";
+import { FacilityMap } from "@/components/units/FacilityMap";
 
 const STATUS_TONE = { vacant: "warn", occupied: "good", reserved: "info", maintenance: "neutral" } as const;
 const STATUS_LABEL = { vacant: "Vacant", occupied: "Occupied", reserved: "Reserved", maintenance: "Maintenance" } as const;
@@ -15,13 +16,34 @@ const initialState: ActionState = { error: null };
 export function UnitsClient({ units, canEdit }: { units: UnitWithTenant[]; canEdit: boolean }) {
   const [addOpen, setAddOpen] = useState(false);
   const [editing, setEditing] = useState<UnitWithTenant | null>(null);
+  const [view, setView] = useState<"list" | "map">("map");
 
   return (
     <>
       <div className="flex items-center justify-between px-8 pt-6">
-        <p className="text-sm text-ink-muted">{units.length} unit{units.length === 1 ? "" : "s"}</p>
+        <div className="flex items-center gap-4">
+          <p className="text-sm text-ink-muted">{units.length} unit{units.length === 1 ? "" : "s"}</p>
+          <div className="flex gap-1 rounded-md bg-navy-soft p-1">
+            <button
+              onClick={() => setView("map")}
+              className={`rounded px-3 py-1 text-xs font-semibold ${view === "map" ? "bg-surface text-ink shadow-sm" : "text-ink-muted"}`}
+            >
+              Map View
+            </button>
+            <button
+              onClick={() => setView("list")}
+              className={`rounded px-3 py-1 text-xs font-semibold ${view === "list" ? "bg-surface text-ink shadow-sm" : "text-ink-muted"}`}
+            >
+              List View
+            </button>
+          </div>
+        </div>
         {canEdit && <Button onClick={() => setAddOpen(true)}>+ Add Unit</Button>}
       </div>
+
+      {view === "map" ? (
+        <FacilityMap units={units} onSelectUnit={setEditing} />
+      ) : (
       <div className="px-8 py-4">
         <div className="overflow-x-auto rounded-xl bg-surface shadow-card">
           <table className="w-full min-w-[760px] text-left text-sm">
@@ -67,6 +89,7 @@ export function UnitsClient({ units, canEdit }: { units: UnitWithTenant[]; canEd
           </table>
         </div>
       </div>
+      )}
 
       {canEdit && (
         <UnitFormModal
